@@ -1,0 +1,71 @@
+<html>
+<head>
+	<title>Subframe for Tableau JS without Embed</title>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+	<!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.2.2/Chart.js"></script>-->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+	<script type="text/javascript" src="http://127.0.0.1:9999/js/app.js"></script>
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+	<style>
+     body { font: "Benton Sans SemiDemi",Arial,Helvetica,sans-serif 12px/20px;  }
+	</style>
+</head>
+<body onload="appApi.initEditor();">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-sm-12">
+        <div id="intro-text">
+          <h3>Edit the selected data</h3>
+          <p>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+
+        <!-- The actual editor form -->
+        <div class='editor-form-wrap'>
+          <form id="editor-form">
+
+            <input type="hidden" name="id" value="" />
+
+            <dl>
+              <dt>System name</dt>
+              <dd data-field="system_name"><dd>
+
+              <dt>Port location</dt>
+              <dd data-field="port_location"><dd>
+
+              <dt>Month start</dt>
+              <dd data-field="month_start"><dd>
+
+              <dt>Unit price</dt>
+              <dd>$<span data-field="unit_price"></span><dd>
+            </dl>
+
+            <div class="form-group">
+              <label for="exampleInputEmail1">Quantity</label>
+              <input type="number" class="form-control" id="quantity-input" name='quantity' placeholder="New quantity">
+            </div>
+
+            <a href="#" class="btn btn-default" data-submit="true" data-url="/update-quantity/{{id}}/{{quantity}}">Submit</a>
+
+
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "name": "tableau-js-modify-underlying-data",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.4.6",
+    "coffee-script": "^1.10.0",
+    "csv": "^1.1.0",
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "gulp-coffee": "^2.3.2",
+    "gulp-concat": "^2.6.0",
+    "gulp-livereload": "^3.8.1",
+    "gulp-nodemon": "^2.1.0",
+    "gulp-notify": "^2.2.0",
+    "gulp-serve": "^1.4.0",
+    "gulp-util": "^3.0.7",
+    "gulp-watch": "^4.3.9",
+    "moment": "^2.14.1",
+    "pg": "^6.1.0",
+    "underscore": "^1.8.3"
+  }
+}
