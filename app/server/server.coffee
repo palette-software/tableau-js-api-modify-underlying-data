@@ -1,6 +1,8 @@
 _ = require 'underscore'
 pg = require 'pg'
 Promise = require 'bluebird'
+cors = require('cors')
+
 
 express = require 'express'
 app = express()
@@ -17,10 +19,10 @@ client = new pg.Client()
 # note: all config is optional and the environment variables
 # will be read if the config is not present
 config =
-  user: 'postgres', #env var: PGUSER
-  database: 'TabMon', #env var: PGDATABASE
-  password: 'abc12def', #env var: PGPASSWORD
-  host: '127.0.0.1', # Server hosting the postgres database
+  user: 'testuser', #env var: PGUSER
+  database: 'testuser', #env var: PGDATABASE
+  password: 'test123', #env var: PGPASSWORD
+  host: '52.44.214.221', # Server hosting the postgres database
   port: 5432, #env var: PGPORT
   max: 10, # max number of clients in the pool
   idleTimeoutMillis: 30000, # how long a client is allowed to remain idle before being closed
@@ -52,6 +54,7 @@ q = (query, opts=[])->
       resolve(res)
 
 app.use express.static('_public')
+app.use(cors())
 
 app.get '/data', (req, res)->
   onError = (err)->

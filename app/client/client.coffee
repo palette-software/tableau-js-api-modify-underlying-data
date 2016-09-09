@@ -32,8 +32,10 @@ getColumnIndexes = (table, required_keys)->
 # Takes a Tableau Row and a "COL_NAME" => COL_IDX map and returns
 # a new object with the COL_NAME fields set to the corresponding values
 convertRowToObject = (row, attrs_map)->
+  console.log row, attrs_map
   o = {}
-  for name, id in attrs_map
+  for name, id of attrs_map
+    console.log "Matached #{name} to #{id}", row[id]
     o[name] = row[id].value
   o
 
@@ -63,7 +65,7 @@ submitForm = (e)->
   # Collect the form data
   formData = getFormFields('#editor-form')
   # replace the submit url with the proper fields
-  submit_url = $(this).data('url').replace /\{\{([a-z_]+)\}\}/g, (m, name)-> formData[name]
+  submit_url = "http://localhost:9999" + $(this).data('url').replace /\{\{([a-z_]+)\}\}/g, (m, name)-> formData[name]
 
   $.get(submit_url)
     .done ()-> console.log "Data sent"
@@ -82,6 +84,8 @@ initEditorForm = (selector)->
 initEditor = ->
   $editorForm = initEditorForm("#editor-form")
 
+  console.log "Editor init"
+
   # Get the tableau bits from the parent.
   tableau = getTableau()
 
@@ -91,8 +95,11 @@ initEditor = ->
 
   # Handler for loading and converting the tableau data to chart data
   onDataLoadOk = errorWrapped "Getting data from Tableau", (table)->
+      console.log "Data oK"
       # Decompose the ids
       col_indexes = getColumnIndexes(table, ["id", "month_start", "system_name", "port_location", "product_name", "quantity"])
+
+      console.log "COL INDEXES:", col_indexes
 
 
       graphDataByCategory = _.chain(table.getData())
@@ -100,11 +107,14 @@ initEditor = ->
         .first()
         .value()
 
+      console.log "DATA", graphDataByCategory
+
       errorWrapped( "Updating form fields", updateFormFields)( $editorForm, graphDataByCategory )
 
   # Handler that gets the selected data from tableau and sends it to the chart
   # display function
   updateEditor = ()->
+    console.log "updateEditor"
     getCurrentWorksheet()
       .getUnderlyingDataAsync({maxRows: 1, ignoreSelection: false, includeAllColumns: true, ignoreAliases: true})
       .then(onDataLoadOk, onDataLoadError )
