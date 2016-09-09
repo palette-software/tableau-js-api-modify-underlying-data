@@ -101,19 +101,17 @@ initEditor = ->
         .value()
 
       errorWrapped( "Updating form fields", updateFormFields)( $editorForm, graphDataByCategory )
-      # Call the updater function to fill the chart
-      #errorWrapped("Updating the chart", updateChartWithData)(graphDataByCategory)
 
   # Handler that gets the selected data from tableau and sends it to the chart
   # display function
-  updateChart = ()->
+  updateEditor = ()->
     getCurrentWorksheet()
       .getUnderlyingDataAsync({maxRows: 1, ignoreSelection: false, includeAllColumns: true, ignoreAliases: true})
       .then(onDataLoadOk, onDataLoadError )
 
   # Add an event listener for marks change events that simply loads the
   # selected data to the chart
-  getCurrentViz().addEventListener( tableau.TableauEventName.MARKS_SELECTION,  updateChart)
+  getCurrentViz().addEventListener( tableau.TableauEventName.MARKS_SELECTION,  updateEditor)
 
 
 
