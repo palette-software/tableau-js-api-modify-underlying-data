@@ -1,6 +1,8 @@
 # Keep the current chart so we can manip it later
 #myChart = null
 
+TABLEAU_NULL = '%null%'
+
 # Quick accessors for accessing the tableau bits on the parent page
 getTableau = ()-> parent.parent.tableau
 getCurrentViz = ()-> getTableau().VizManager.getVizs()[0]
@@ -32,10 +34,8 @@ getColumnIndexes = (table, required_keys)->
 # Takes a Tableau Row and a "COL_NAME" => COL_IDX map and returns
 # a new object with the COL_NAME fields set to the corresponding values
 convertRowToObject = (row, attrs_map)->
-  console.log row, attrs_map
   o = {}
   for name, id of attrs_map
-    console.log "Matached #{name} to #{id}", row[id]
     o[name] = row[id].value
   o
 
@@ -45,12 +45,14 @@ convertRowToObject = (row, attrs_map)->
 updateFormFields = (parent, data)->
   $parent = $(parent)
   for k,v of data
-    $("input[name=#{k}]", $parent.el).val(v)
+    # Skip the tableau %null%-S
+    v = "" if v == TABLEAU_NULL
+    $("input[name=#{k}], textarea[name=#{k}]", $parent.el).val(v)
     $("[data-field=#{k}]", $parent.el).text(v)
 
 getFormFields = (parent)->
   o = {}
-  $("input").each ()->
+  $("input, textarea, [data-field]").each ()->
     $t = $(this)
     o[$t.attr('name')] = $t.val()
   o
@@ -67,8 +69,10 @@ submitForm = (e)->
   # replace the submit url with the proper fields
   submit_url = "http://localhost:9999" + $(this).data('url').replace /\{\{([a-z_]+)\}\}/g, (m, name)-> formData[name]
 
-  $.get(submit_url)
-    .done ()-> console.log "Data sent"
+  $.get(submit_url, _.pick(formData, "id", "quantity", "comment"))
+    .done ()->
+      # Update the tableau workbook after we have the data
+      getCurrentViz().refreshDataAsync()
     .fail (err)-> console.error "Error getting the data:", err.message, err.stack
 
 
@@ -77,14 +81,18 @@ initEditorForm = (selector)->
   $("[data-submit=true]", $editorForm.el).click submitForm
   $editorForm
 
+EDITOR_SELECTOR = "#editor-wrap"
+NODATA_SELECTOR = "#nodata-wrap"
+
+showEditor = ()-> $(NODATA_SELECTOR).hide(100, ()-> $(EDITOR_SELECTOR).show())
+hideEditor = ()-> $(EDITOR_SELECTOR).hide(100, ()-> $(NODATA_SELECTOR).show())
+toggleEditor = (show)-> if show then showEditor() else hideEditor()
 
 # TABLEAU HOOKS
 # ============
 
 initEditor = ->
   $editorForm = initEditorForm("#editor-form")
-
-  console.log "Editor init"
 
   # Get the tableau bits from the parent.
   tableau = getTableau()
@@ -95,26 +103,24 @@ initEditor = ->
 
   # Handler for loading and converting the tableau data to chart data
   onDataLoadOk = errorWrapped "Getting data from Tableau", (table)->
-      console.log "Data oK"
       # Decompose the ids
-      col_indexes = getColumnIndexes(table, ["id", "month_start", "system_name", "port_location", "product_name", "quantity"])
+      col_indexes = getColumnIndexes(table, ["id", "month_start", "system_name", "port_location", "product_name", "quantity", "unit_price", "comment"])
 
-      console.log "COL INDEXES:", col_indexes
+      data = table.getData()
 
+      # Show-hide the editor if we have data
+      toggleEditor(data.length == 1)
 
       graphDataByCategory = _.chain(table.getData())
         .map (row)-> convertRowToObject(row, col_indexes)
         .first()
         .value()
 
-      console.log "DATA", graphDataByCategory
-
       errorWrapped( "Updating form fields", updateFormFields)( $editorForm, graphDataByCategory )
 
   # Handler that gets the selected data from tableau and sends it to the chart
   # display function
   updateEditor = ()->
-    console.log "updateEditor"
     getCurrentWorksheet()
       .getUnderlyingDataAsync({maxRows: 1, ignoreSelection: false, includeAllColumns: true, ignoreAliases: true})
       .then(onDataLoadOk, onDataLoadError )
@@ -124,18 +130,6 @@ initEditor = ->
   getCurrentViz().addEventListener( tableau.TableauEventName.MARKS_SELECTION,  updateEditor)
 
 
-
-#initEditor = ->
-  #$editorForm = initEditorForm("#editor-form")
-
-  #errorWrapped( "Updating form fields", updateFormFields) '#editor-form',
-    #id: "2"
-    #system_name: "Lyrae"
-    #port_location: "Langford Enterprise"
-    #product_name: "Ultra-Compact Processor"
-    #month_start: "2015-01-01"
-    #quantity: 400
-    #unit_price: 14335.00
 
 
 @appApi = {

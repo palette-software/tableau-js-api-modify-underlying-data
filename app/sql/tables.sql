@@ -9,6 +9,8 @@ create table if not exists sales_by_month (
   month_start date,
 
   quantity numeric(10,0),
-  unit_price numeric(10,2)
+  unit_price numeric(10,2),
+
+  comment text
 
 );

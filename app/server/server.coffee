@@ -68,10 +68,10 @@ app.get '/data', (req, res)->
 
     res.json(result)
 
-# Updates the quantity of the selected entry
-app.get '/update-quantity/:id/:quant', (req, res)->
-  console.log "Got update request", [req.params.id, req.params.quant]
-  q( 'UPDATE sales_by_month SET quantity=$2 WHERE id=$1', [req.params.id, req.params.quant])
+app.get '/update-comment/:id', (req, res)->
+  {quantity, comment} = req.query
+  console.log "Got update comment request", [req.params.id, quantity, comment]
+  q( "UPDATE sales_by_month SET quantity=$2, comment=$3 WHERE id=$1", [req.params.id, quantity, comment])
     .then (e)-> res.json("OK")
     .error (err)->
       console.error err.message, err.stack

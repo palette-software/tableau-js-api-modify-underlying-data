@@ -14,57 +14,97 @@
 
 	<style>
      body { font: "Benton Sans SemiDemi",Arial,Helvetica,sans-serif 12px/20px;  }
+     table.info-table { font-size: 12px; }
 	</style>
 </head>
 <body onload="appApi.initEditor();">
   <div class="container">
 
-    <div class="row">
-      <div class="col-sm-12">
-        <div id="intro-text">
-          <h3>Edit the selected data</h3>
-          <p>
-          </p>
+    <div id="editor-wrap"  style='display:none;'>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="intro-text">
+            <h3>Edit the selected data</h3>
+            <p>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+
+          <!-- The actual editor form -->
+          <div class='editor-form-wrap'>
+            <form id="editor-form">
+
+              <input type="hidden" name="id" value="" />
+
+              <table class='table table-condensed info-table'>
+                <tbody>
+                  <tr>
+                    <th>System name</th>
+                    <td data-field="system_name"><td>
+                  </tr>
+                  <tr>
+                    <th>Port location</th>
+                    <td data-field="port_location"><td>
+                  </tr>
+                  <tr>
+                    <th>Month start</th>
+                    <td data-field="month_start"><td>
+                  </tr>
+                  <tr>
+                    <th>Unit price</th>
+                    <td>$<span data-field="unit_price"></span><td>
+                  </tr>
+
+                  <tr>
+                    <th>
+                      <label for="quantity-input">Quantity</label>
+                    </th>
+                    <td>
+                      <input type="number" class="form-control" id="quantity-input" name='quantity' placeholder="New quantity">
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <th>
+                      <label for="comment-input">Comment for this point</label>
+                    </th>
+                    <td >
+                      <textarea name='comment' placeholder='Add a comment...' id='comment-input' class='form-control'></textarea>
+                    </td>
+                  </tr>
+
+                </tbody>
+              </table>
+
+
+              <a href="#" class="btn btn-default" data-submit="true" data-url="/update-comment/{{id}}">Submit</a>
+
+            </form>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-sm-12">
-
-        <!-- The actual editor form -->
-        <div class='editor-form-wrap'>
-          <form id="editor-form">
-
-            <input type="hidden" name="id" value="" />
-
-            <dl>
-              <dt>System name</dt>
-              <dd data-field="system_name"><dd>
-
-              <dt>Port location</dt>
-              <dd data-field="port_location"><dd>
-
-              <dt>Month start</dt>
-              <dd data-field="month_start"><dd>
-
-              <dt>Unit price</dt>
-              <dd>$<span data-field="unit_price"></span><dd>
-            </dl>
-
-            <div class="form-group">
-              <label for="exampleInputEmail1">Quantity</label>
-              <input type="number" class="form-control" id="quantity-input" name='quantity' placeholder="New quantity">
-            </div>
-
-            <a href="#" class="btn btn-default" data-submit="true" data-url="/update-quantity/{{id}}/{{quantity}}">Submit</a>
-
-
-          </form>
+    <div id='nodata-wrap'>
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="intro-text">
+            <h3>Select a data point</h3>
+            <p>
+              To edit the data and the comments
+            </p>
+          </div>
         </div>
-
       </div>
+
     </div>
+
   </div>
 
 </body>
