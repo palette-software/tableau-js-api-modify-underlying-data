@@ -3,7 +3,6 @@ pg = require 'pg'
 Promise = require 'bluebird'
 cors = require('cors')
 
-
 express = require 'express'
 app = express()
 
@@ -55,18 +54,6 @@ q = (query, opts=[])->
 
 app.use express.static('_public')
 app.use(cors())
-
-app.get '/data', (req, res)->
-  onError = (err)->
-    console.log(err.message, err.stack)
-    res.writeHead(500, {'content-type': 'text/plain'});
-    res.end('An error occurred');
-
-  pool.query 'SELECT * FROM sales_by_month;', (err, result)->
-    if err
-      return onError(err)
-
-    res.json(result)
 
 app.get '/update-comment/:id', (req, res)->
   {quantity, comment} = req.query

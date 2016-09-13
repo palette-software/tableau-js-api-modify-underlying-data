@@ -67,7 +67,7 @@ submitForm = (e)->
   # Collect the form data
   formData = getFormFields('#editor-form')
   # replace the submit url with the proper fields
-  submit_url = "http://localhost:9999" + $(this).data('url').replace /\{\{([a-z_]+)\}\}/g, (m, name)-> formData[name]
+  submit_url = $(this).data('url').replace /\{\{([a-z_]+)\}\}/g, (m, name)-> formData[name]
 
   $.get(submit_url, _.pick(formData, "id", "quantity", "comment"))
     .done ()->
