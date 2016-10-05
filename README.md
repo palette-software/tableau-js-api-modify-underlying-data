@@ -453,7 +453,7 @@ errorWrapped = (context, fn)->
 
 ## Set up an event handler
 
-We want to show a SanKey graph when the user selects a country on our
+We want to show the comment / value form when the user selects a point on our
 dashboard. To do this, we'll hook into the Tableau `MARKS_SELECTION`
 event.
 
@@ -472,7 +472,7 @@ initEditor = ->
   # Handler for loading and converting the tableau data to chart data
   onDataLoadOk = errorWrapped "Getting data from Tableau", (table)-> # [...]
 
-  # Handler that gets the selected data from tableau and sends it to the chart
+  # Handler that gets the selected data from tableau and sends it to the form
   # display function
   updateEditor = ()->
     getCurrentWorksheet()
@@ -622,7 +622,7 @@ submitForm = (e)->
 
 ```
 
-The onyl tricky part here is using the `data-url` attribute of our
+The only tricky part here is using the `data-url` attribute of our
 submit control to tell us where we want to submit our form (we could
 have set the forms `action` attribute if we want to be semantically
 correct about that, but since we are templating the string, that would
